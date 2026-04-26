@@ -1,4 +1,7 @@
 package com.vague.core.chat.mapper;
 
-public interface BaseEntityMapper {
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.vague.core.chat.common.entity.BaseEntity;
+
+public interface BaseEntityMapper extends BaseMapper<BaseEntity> {
 }

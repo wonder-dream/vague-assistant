@@ -1,4 +1,4 @@
-package com.vague.core.chat.common;
+package com.vague.core.chat.common.result;
 
 import lombok.Data;
 

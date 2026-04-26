@@ -1,4 +1,5 @@
 package com.vague.core.chat.common;
 
-public class constant {
+public class Constant {
+    public static final int LIMIT = 20;
 }
