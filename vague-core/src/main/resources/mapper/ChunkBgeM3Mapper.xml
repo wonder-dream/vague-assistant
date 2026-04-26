@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vague.core.rag.mapper.ChunkBgeM3Mapper">
+
+    <resultMap id="BaseResultMap" type="com.vague.core.rag.entity.ChunkBgeM3">
+        <id column="id" property="id"/>
+        <result column="kb_id" property="kbId"/>
+        <result column="doc_id" property="docId"/>
+        <result column="content" property="content"/>
+        <result column="metadata" property="metadata"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="distance" property="distance"/>
+        <result column="embedding" property="embedding"
+                typeHandler="com.vague.core.rag.typehandler.PgVectorTypeHandler"/>
+    </resultMap>
+
+    <!-- 向量检索：按单个 kb_id -->
+    <select id="searchByVector" resultMap="BaseResultMap">
+        SELECT
+        id, kb_id, doc_id, content, metadata, created_at, updated_at,
+        embedding <![CDATA[ <=> ]]> #{embedding} as distance
+        FROM chunk_bge_m3
+        WHERE kb_id = #{kbId}
+        ORDER BY embedding <![CDATA[ <=> ]]> #{embedding}
+        LIMIT #{limit}
+    </select>
+
+    <!-- 关键：Agent 有多个 kb，按 allowed_kbs 数组批量检索 -->
+    <select id="searchByVectorMultiKb" resultMap="BaseResultMap">
+        SELECT
+        id, kb_id, doc_id, content, metadata, created_at, updated_at,
+        embedding <![CDATA[ <=> ]]> #{embedding} as distance
+        FROM chunk_bge_m3
+        WHERE kb_id = ANY(#{kbIds}::uuid[])
+        ORDER BY embedding <![CDATA[ <=> ]]> #{embedding}
+        LIMIT #{limit}
+    </select>
+
+</mapper>
